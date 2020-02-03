@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     
     var duration: Double = 2.0
     var moveDistance: CGFloat = 150
+    var chosenIndex: Int = -1
     
     // MARK: Create Blue Square
     lazy var blueSquare: UIView = {
@@ -104,7 +105,7 @@ class ViewController: UIViewController {
     @IBAction func animateSquareUp(sender: UIButton) {
         let oldOffset = blueSquareCenterYConstraint.constant
         blueSquareCenterYConstraint.constant = oldOffset - moveDistance
-        UIView.animate(withDuration: duration, delay: 0, options: [UIView.AnimationOptions.init(rawValue: 131072)], animations: {[unowned self] in
+        UIView.animate(withDuration: duration, delay: 0, options: returnAnimationOptions(chosenIndex), animations: {[unowned self] in
             self.view.layoutIfNeeded()
             })
 //        UIView.animate(withDuration: duration) { [unowned self] in
@@ -115,26 +116,26 @@ class ViewController: UIViewController {
     @IBAction func animateSquareDown(sender: UIButton) {
         let oldOffet = blueSquareCenterYConstraint.constant
         blueSquareCenterYConstraint.constant = oldOffet + moveDistance
-        UIView.animate(withDuration: duration) { [unowned self] in
-            self.view.layoutIfNeeded()
-        }
+        UIView.animate(withDuration: duration, delay: 0, options: returnAnimationOptions(chosenIndex), animations: {[unowned self] in
+        self.view.layoutIfNeeded()
+        })
     }
     
     // MARK: Animate Left Action
     @IBAction func animateSquareLeft(sender: UIButton){
         let oldOffSet = blueSquareCenterXConstraint.constant
         blueSquareCenterXConstraint.constant = oldOffSet - moveDistance
-        UIView.animate(withDuration: duration){ [unowned self] in
-            self.view.layoutIfNeeded()
-        }
+        UIView.animate(withDuration: duration, delay: 0, options: returnAnimationOptions(chosenIndex), animations: {[unowned self] in
+        self.view.layoutIfNeeded()
+        })
     }
     // MARK: Animate Right Action
     @IBAction func animateSquareRight(sender: UIButton){
         let oldOffSet = blueSquareCenterXConstraint.constant
         blueSquareCenterXConstraint.constant = oldOffSet + moveDistance
-        UIView.animate(withDuration: duration){
-            self.view.layoutIfNeeded()
-        }
+        UIView.animate(withDuration: duration, delay: 0, options: returnAnimationOptions(chosenIndex), animations: {[unowned self] in
+        self.view.layoutIfNeeded()
+        })
     }
     
     // MARK: Segue Function
@@ -199,11 +200,29 @@ class ViewController: UIViewController {
             buttonStackView.widthAnchor.constraint(equalTo: view.widthAnchor),
         ])
     }
+    
+    private func returnAnimationOptions(_ index: Int) -> UIView.AnimationOptions{
+        switch index{
+        case 0:
+            return UIView.AnimationOptions.repeat
+        case 1:
+            return [UIView.AnimationOptions.repeat, UIView.AnimationOptions.autoreverse]
+        case 2:
+            return UIView.AnimationOptions.curveLinear
+        case 3:
+            return UIView.AnimationOptions.curveEaseOut
+        case 4:
+            return UIView.AnimationOptions.curveEaseIn
+        default:
+            return UIView.AnimationOptions.curveLinear
+        }
+    }
 }
 
 extension ViewController: SettingsControllerDelegate{
     func settingsChanged(_ settingsController: SettingsController) {
         duration = settingsController.settingsView.durationStepper.value
         moveDistance = CGFloat(settingsController.settingsView.offsetStepper.value)
+        chosenIndex = settingsController.indexOfRowSelected
     }
 }

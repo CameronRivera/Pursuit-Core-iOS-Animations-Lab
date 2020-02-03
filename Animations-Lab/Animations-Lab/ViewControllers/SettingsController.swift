@@ -14,7 +14,6 @@ enum AnimationOptions: Int{
     case curveEaseOut = 131072
     case curveLinear = 196608
     case autoReverse = 16
-    
 }
 
 protocol SettingsControllerDelegate: AnyObject{
@@ -24,7 +23,8 @@ protocol SettingsControllerDelegate: AnyObject{
 class SettingsController: UIViewController {
 
     let settingsView = SettingsView()
-    let animationOptions = [AnimationOptions.repeat, AnimationOptions.autoReverse, AnimationOptions.curveLinear, AnimationOptions.curveEaseOut, AnimationOptions.curveEaseIn]
+    let animationOptions = ["Repeat", "Auto Reverse", "Curve Linear", "Curve East Out", "Curve Ease In"]
+    var indexOfRowSelected = -1
     
     override func loadView(){
         view = settingsView
@@ -90,5 +90,9 @@ extension SettingsController: UIPickerViewDataSource{
 extension SettingsController: UIPickerViewDelegate{
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return "\(animationOptions[row])"
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        indexOfRowSelected = row
     }
 }
